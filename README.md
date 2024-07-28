@@ -44,10 +44,14 @@ On Fedora: `sudo firewall-cmd --add-port=5000/udp`
 
 Start server (default port for control is 58008 hehe, default port is 5000 for video stream):
 
+`cd car`
+
 `./run_server.sh <host computer IP>`
 
 ### Host Computer
 Start client:
+
+`cd control`
 
 `./run_client.sh <Raspberry Pi IP>`
 
