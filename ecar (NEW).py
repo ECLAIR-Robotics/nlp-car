@@ -108,7 +108,7 @@ SERV_LIMIT = 45  # Servo angle limit
 SPD_LIMIT = 100  # Speed limit for motors (0-100)
 
 class Car:
-    def __init__(self, pi, rm_spd=0, lm_spd=0, serv_ang=0):
+    def __init__(self, pi, rm_spd = 0, lm_spd = 0, serv_ang = 0):
         self.rm_spd = rm_spd
         self.lm_spd = lm_spd
         self.serv_ang = serv_ang
