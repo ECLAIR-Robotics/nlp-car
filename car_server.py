@@ -1,8 +1,7 @@
 import socket
 import sys
 from car.ecar import Car
-r_speed = 0
-l_speed = 0
+speed = 0
 angle = 0
 
 car = None
