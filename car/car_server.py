@@ -5,7 +5,7 @@ speed = 0
 angle = 0
 
 car = None
-keys_pressed = {'w': False, 'a': False, 's': False, 'd': False, ' ': False}
+keys_pressed = {'w': False, 'a': False, 's': False, 'd': False, ' ': False, 'x': False}
 
 '''
 def handle_keys():
@@ -35,7 +35,7 @@ def handle_keys():
         if speed >= -100:
             speed -= 5
         car.reverse(speed)
-    else:
+    if keys_pressed['x']:
         car.brake()
     if keys_pressed['a']:
         if angle >= 500:
@@ -45,8 +45,6 @@ def handle_keys():
         if angle <= 2500:
             angle += 10
         car.turn_right(angle)
-    else:
-        car.reset_direction()
     if keys_pressed[' ']:
         car.reset_direction()
 
