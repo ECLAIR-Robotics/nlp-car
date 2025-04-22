@@ -1,10 +1,13 @@
 import socket
 import sys
 from car.ecar import Car
+speed = 0
+angle = 0
 
 car = None
 keys_pressed = {'w': False, 'a': False, 's': False, 'd': False, ' ': False}
 
+'''
 def handle_keys():
     speed = 50
     if keys_pressed[' ']:
@@ -20,6 +23,31 @@ def handle_keys():
     elif keys_pressed['d']:
         car.turn_right()
     else:
+        car.reset_direction()
+'''
+
+def handle_keys():
+    if keys_pressed['w']:
+        if speed <= 100:
+            speed += 5
+        car.forward(speed)
+    elif keys_pressed['s']:
+        if speed >= -100:
+            speed -= 5
+        car.reverse(speed)
+    else:
+        car.brake()
+    if keys_pressed['a']:
+        if angle >= 500:
+            angle -= 10
+        car.turn_left(angle)
+    elif keys_pressed['d']:
+        if angle <= 2500:
+            angle += 10
+        car.turn_right(angle)
+    else:
+        car.reset_direction()
+    if keys_pressed[' ']:
         car.reset_direction()
 
 def server(car_port):
