@@ -26,26 +26,30 @@ class Car:
         self.pi.set_PWM_frequency(motor2_pins[0], 50)
         self.pi.set_PWM_frequency(motor2_pins[1], 50)
 
-    def forward(self, speed=50):
-        duty_cycle = int(speed * 255 / 100)
-        self.pi.set_PWM_dutycycle(self.motor1_pins[0], duty_cycle)
-        self.pi.set_PWM_dutycycle(self.motor1_pins[1], 0)
-        self.pi.set_PWM_dutycycle(self.motor2_pins[0], duty_cycle)
-        self.pi.set_PWM_dutycycle(self.motor2_pins[1], 0)
+    def accel(self, speed):
+        duty_cycle = int(abs(speed) * 255 / 100)
+        if speed > 0:       # forward
+            self.pi.set_PWM_dutycycle(self.motor1_pins[0], duty_cycle)
+            self.pi.set_PWM_dutycycle(self.motor1_pins[1], 0)
+            self.pi.set_PWM_dutycycle(self.motor2_pins[0], duty_cycle)
+            self.pi.set_PWM_dutycycle(self.motor2_pins[1], 0)
+        elif speed < 0:     # reverse
+            self.pi.set_PWM_dutycycle(self.motor1_pins[0], 0)
+            self.pi.set_PWM_dutycycle(self.motor1_pins[1], duty_cycle)
+            self.pi.set_PWM_dutycycle(self.motor2_pins[0], 0)
+            self.pi.set_PWM_dutycycle(self.motor2_pins[1], duty_cycle)
+        else:
+            self.brake()
 
-    def reverse(self, speed=50):
-        duty_cycle = int(speed * 255 / 100)
-        self.pi.set_PWM_dutycycle(self.motor1_pins[0], 0)
-        self.pi.set_PWM_dutycycle(self.motor1_pins[1], duty_cycle)
-        self.pi.set_PWM_dutycycle(self.motor2_pins[0], 0)
-        self.pi.set_PWM_dutycycle(self.motor2_pins[1], duty_cycle)
-
-    def turn_left(self, strength):
-        self.pi.set_servo_pulsewidth(self.servo_pin, strength/100 * (SERVO_MAX-SERVO_RST) + SERVO_RST)
+    def turn(self, strength):
+        if strength > 0:    # turn left
+            pulsewidth = strength / 100 * (SERVO_MAX - SERVO_RST) + SERVO_RST
+        elif strength < 0:  # turn right
+            pulsewidth = SERVO_RST + strength / 100 * (SERVO_RST - SERVO_MIN)
+        else:
+            pulsewidth = SERVO_RST
+        self.pi.set_servo_pulsewidth(self.servo_pin, pulsewidth)
     
-    def turn_right(self, strength):
-        self.pi.set_servo_pulsewidth(self.servo_pin, SERVO_RST - strength/100 * (SERVO_RST-SERVO_MIN))
-
     def brake(self):
         self.pi.set_PWM_dutycycle(self.motor1_pins[0], 0)
         self.pi.set_PWM_dutycycle(self.motor1_pins[1], 0)
@@ -55,9 +59,6 @@ class Car:
     def stop(self):
         self.brake()
         self.pi.set_servo_pulsewidth(self.servo_pin, 0)
-
-    def reset_direction(self):
-        self.pi.set_servo_pulsewidth(self.servo_pin, 1250)
-
+    
     def cleanup(self):
         self.pi.stop()
